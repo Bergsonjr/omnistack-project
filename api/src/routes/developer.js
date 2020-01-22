@@ -6,5 +6,7 @@ const users = Router()
 users
     .get('/', developerCtrl.index)
     .post('/', developerCtrl.store)
+    .put('/', developerCtrl.update)
+    .delete('/', developerCtrl.destroy)
 
 module.exports = users
