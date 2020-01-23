@@ -28,6 +28,13 @@ function App() {
         setDevs([...devs, response.data])
     }
 
+    async function removeUser(user) {
+        const response = await api.delete('/devs', user)
+        console.log(response.data, 'response.data')
+        const iUser = devs.find(dev => dev._id === user._id)
+        setDevs([...devs].splice(iUser, 1))
+    }
+
     return (
         <div id="App">
             <aside>
@@ -36,7 +43,7 @@ function App() {
             </aside>
             <main>
                 <ul>
-                    {devs.map(dev => <DevItem key={dev._id} dev={dev} />)}
+                    {devs.map(dev => <DevItem key={dev._id} dev={dev} handler={removeUser} />)}
                 </ul>
             </main>
         </div>

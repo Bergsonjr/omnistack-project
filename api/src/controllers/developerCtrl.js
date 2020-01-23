@@ -30,6 +30,7 @@ module.exports = {
                     }
                 )
                 const { name = login, avatar_url, bio } = await responseGit.json()
+                console.log(login, name)
 
                 const location = { type: 'Point', coordinates: [longitude, latitude] }
 
@@ -49,11 +50,35 @@ module.exports = {
         }
     },
 
-    async update() {
-        //TODO:
+    async update(req, res) {
+        try {
+            const { _id } = req.query
+            const { github_username, name, avatar_url, bio, techs, location } = req.body
+
+            await Developer.findOneAndUpdate(_id, {
+                github_username,
+                name,
+                avatar_url,
+                bio,
+                techs,
+                location,
+            })
+
+            return res.status(204).send()
+        } catch (error) {
+            console.error(error)
+        }
     },
 
-    async destroy() {
-        //TODO:
+    async destroy(req, res) {
+        try {
+            const { _id } = req.body
+
+            await Developer.deleteOne({ _id })
+
+            return res.status(204).send()
+        } catch (error) {
+            console.error(error)
+        }
     }
 }
