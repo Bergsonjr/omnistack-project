@@ -6,9 +6,9 @@ module.exports = {
     async index(req, res) {
         try {
             const devs = await Developer.find()
-
-            return res.status(200).json(devs)
-        } catch (error) {
+            res.status(200).json(devs)
+        }
+        catch (error) {
             console.error(error)
         }
     },
@@ -30,7 +30,6 @@ module.exports = {
                     }
                 )
                 const { name = login, avatar_url, bio } = await responseGit.json()
-                console.log(login, name)
 
                 const location = { type: 'Point', coordinates: [longitude, latitude] }
 
@@ -44,18 +43,19 @@ module.exports = {
                 })
             }
 
-            return res.status(201).json(dev)
-        } catch (error) {
+            res.status(201).json(dev)
+        }
+        catch (error) {
             console.error(error)
         }
     },
 
     async update(req, res) {
         try {
-            const { _id } = req.query
+            const { _id } = req.params
             const { github_username, name, avatar_url, bio, techs, location } = req.body
 
-            await Developer.findOneAndUpdate(_id, {
+            const dev = await Developer.findOneAndUpdate(_id, {
                 github_username,
                 name,
                 avatar_url,
@@ -63,22 +63,24 @@ module.exports = {
                 techs,
                 location,
             })
-
-            return res.status(204).send()
-        } catch (error) {
+            console.log(dev, 'dev')
+            res.status(204).send()
+        }
+        catch (error) {
             console.error(error)
+            res.status(500).send()
         }
     },
 
     async destroy(req, res) {
         try {
-            const { _id } = req.body
-
+            const { _id } = req.params
             await Developer.deleteOne({ _id })
-
-            return res.status(204).send()
-        } catch (error) {
+            res.status(204).send()
+        }
+        catch (error) {
             console.error(error)
+            res.status(500).send()
         }
     }
 }

@@ -7,7 +7,6 @@ export default function DevForm({ onSubmit }) {
     const [github_username, setUser] = useState('')
     const [techs, setTechs] = useState('')
 
-
     useEffect(() => {
         navigator.geolocation.getCurrentPosition((data) => {
             const { latitude, longitude } = data.coords

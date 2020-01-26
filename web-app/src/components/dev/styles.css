@@ -49,3 +49,12 @@ li.dev-item a {
 li.dev-item a:hover {
     color: #5A2EA6;
 }
+
+svg {
+    cursor: pointer;
+    transition: color 0.5s;
+}
+
+svg:hover {
+    color: #6931ca;
+}
