@@ -16,23 +16,23 @@ module.exports = {
     async store(req, res) {
         try {
 
-            const { github_username, techs, latitude, longitude } = req.body
+            const { github_username, techs, latitude, longitude, _id } = req.body
 
             let dev = await Developer.findOne({ github_username })
 
-            if (!dev) {
-                const responseGit = await fetch(`https://api.github.com/users/${github_username}`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
+            const responseGit = await fetch(`https://api.github.com/users/${github_username}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
-                )
-                const { name = login, avatar_url, bio } = await responseGit.json()
+                }
+            )
+            const { name = login, avatar_url, bio } = await responseGit.json()
 
-                const location = { type: 'Point', coordinates: [longitude, latitude] }
+            const location = { type: 'Point', coordinates: [longitude, latitude] }
 
+            if (!dev) {
                 dev = await Developer.create({
                     github_username,
                     name,
@@ -41,9 +41,19 @@ module.exports = {
                     techs,
                     location,
                 })
+                res.status(201).json(dev)
             }
-
-            res.status(201).json(dev)
+            else {
+                dev = await Developer.findOneAndUpdate({}, {
+                    github_username,
+                    name,
+                    avatar_url,
+                    bio,
+                    techs,
+                    location,
+                }, { new: true })
+                res.status(200).send(dev)
+            }
         }
         catch (error) {
             console.error(error)
